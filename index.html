@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ropa desde USA</title>
+<meta name="description" content="Ropa de Estados Unidos bajo pedido. Cierres de pedido dos veces al mes para traer todo junto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Dirección: etiqueta de envío. Cinta amarilla y tinta negra sobre gris concreto; la cinta es el único riesgo, el resto queda tranquilo. */
+:root{
+  --bg:#eceef0; --surface:#ffffff; --ink:#111418; --muted:#586170; --line:#d3d8de;
+  --tape:#f5c400; --tape-ink:#111418; --ok:#1d7448; --warn:#a64b08; --danger:#b3261e; --focus:#1a56db;
+  --display:'Barlow Condensed','Arial Narrow',sans-serif; --body:'Figtree',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1013; --surface:#171a1f; --ink:#eef0f2; --muted:#9ba4b0; --line:#2a2f36;
+    --ok:#4cc38a; --warn:#f0a35e; --danger:#ff8a80; --focus:#7aa7ff; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1013; --surface:#171a1f; --ink:#eef0f2; --muted:#9ba4b0; --line:#2a2f36;
+  --ok:#4cc38a; --warn:#f0a35e; --danger:#ff8a80; --focus:#7aa7ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;margin:0;text-wrap:balance;line-height:1.05}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+
+/* barra superior */
+.top{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;min-height:60px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.7rem;text-transform:uppercase;letter-spacing:.02em;flex:1;min-width:140px;line-height:1}
+.seg{display:inline-flex;border:2px solid var(--ink);border-radius:8px;overflow:hidden}
+.seg button{background:transparent;border:0;padding:7px 14px;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:2px solid var(--ink);background:var(--surface);border-radius:8px;padding:9px 16px;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--bg)}
+.btn.tape{background:var(--tape);color:var(--tape-ink);border-color:var(--tape-ink)}
+.btn.tape:hover{filter:brightness(.96)}
+.btn.small{padding:5px 10px;font-size:.88rem}
+.btn.danger{border-color:var(--danger);color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.count{background:var(--ink);color:var(--surface);border-radius:99px;min-width:22px;height:22px;padding:0 6px;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem}
+
+/* banner de ciclo */
+.cycle{margin:20px 0;background:var(--surface);border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+.cycle .tapebar{height:12px;background:repeating-linear-gradient(135deg,var(--tape) 0 16px,#111418 16px 32px)}
+.cycle .body{display:grid;grid-template-columns:auto 1fr;gap:8px 24px;padding:18px 20px;align-items:center}
+.cycle .days{font-family:var(--display);font-weight:700;font-size:4.2rem;line-height:.9;text-align:center}
+.cycle .days small{display:block;font-family:var(--body);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:4px}
+.cycle h2{font-size:1.9rem}
+.cycle p{margin:6px 0 0;max-width:62ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.fact{border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:.88rem}
+.fact b{font-family:var(--mono);font-weight:500}
+@media (max-width:560px){.cycle .body{grid-template-columns:1fr}.cycle .days{text-align:left}}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 24px;padding:0;list-style:none}
+.steps li{border-left:4px solid var(--tape);background:var(--surface);padding:10px 14px;border-radius:0 8px 8px 0;font-size:.95rem}
+.steps b{display:block;font-family:var(--display);text-transform:uppercase;font-size:1.15rem;letter-spacing:.03em}
+@media (max-width:700px){.steps{grid-template-columns:1fr}}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{border:1px solid var(--ink);background:transparent;border-radius:99px;padding:5px 14px;cursor:pointer;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;padding-bottom:48px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.photo{aspect-ratio:4/5;background:var(--bg);position:relative;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:5rem;font-weight:700;color:rgba(255,255,255,.9)}
+.tag{position:absolute;top:8px;left:8px;background:var(--ink);color:var(--surface);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:4px}
+.card .info{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{font-size:1.25rem}
+.price{font-family:var(--mono);font-size:1.15rem;font-weight:500}
+.sizes{display:flex;gap:6px;flex-wrap:wrap}
+.size{border:1px solid var(--line);background:transparent;border-radius:6px;min-width:36px;padding:4px 8px;cursor:pointer;font-size:.85rem;font-weight:600}
+.size[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--surface)}
+.card .btn{margin-top:auto}
+.empty{padding:40px 16px;text-align:center;color:var(--muted)}
+
+/* cajón del pedido */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;display:none}
+.scrim.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);z-index:50;transform:translateX(100%);transition:transform .2s;display:flex;flex-direction:column;border-left:2px solid var(--ink)}
+.drawer.open{transform:none}
+@media (prefers-reduced-motion:reduce){.drawer{transition:none}}
+.drawer header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+.drawer header h2{font-size:1.6rem}
+.drawer .lines{flex:1;overflow:auto;padding:8px 16px}
+.line{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.line .name{font-weight:600}
+.qty{display:inline-flex;align-items:center;gap:6px;margin-top:4px}
+.qty button{width:28px;height:28px;border:1px solid var(--ink);background:transparent;border-radius:6px;cursor:pointer;font-weight:700}
+.drawer footer{padding:14px 16px;border-top:2px solid var(--ink);display:flex;flex-direction:column;gap:10px}
+.row{display:flex;justify-content:space-between;gap:12px}
+.note{font-size:.88rem;color:var(--muted)}
+a.btn{text-decoration:none;color:inherit}
+
+
+[hidden]{display:none!important}
+
+.status{padding:48px 16px;text-align:center;color:var(--muted)}
+.demo{background:var(--tape);color:var(--tape-ink);padding:8px 0;font-size:.9rem;font-weight:600}
+.msg{font-size:.9rem;margin-top:8px;min-height:1.2em}
+.msg.ok{color:var(--ok)}.msg.err{color:var(--danger)}
+footer.site{padding:24px 16px 40px;text-align:center;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="demo" id="demoBar" hidden><div class="wrap">MODO DEMOSTRACIÓN: aún no está conectada tu hoja de Google. Estas prendas son de ejemplo.</div></div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand" id="brandName">Ropa desde USA</div>
+    <button class="btn" id="openCart" aria-label="Abrir mi pedido">Mi pedido <span class="count" id="cartCount">0</span></button>
+  </div>
+</header>
+
+<main class="wrap" id="shop">
+  <section class="cycle" aria-labelledby="cycleTitle">
+    <div class="tapebar" aria-hidden="true"></div>
+    <div class="body">
+      <div class="days"><span id="daysLeft">–</span><small id="daysUnit"></small></div>
+      <div>
+        <h2 id="cycleTitle">Próximo cierre de pedidos: <span id="cutoffDate">…</span></h2>
+        <p>Hago un solo pedido a Estados Unidos por ciclo y traigo todo junto. Así el envío se reparte y los precios se mantienen bajos. Lo que pidas después del cierre entra al ciclo siguiente.</p>
+        <div class="facts">
+          <span class="fact">Llegada estimada: <b id="arrivalDate">…</b></span>
+          <span class="fact">Anticipo para separar: <b id="anticipoTxt">…</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ol class="steps">
+    <li><b>1. Elige</b>Escoge tus prendas y tallas.</li>
+    <li><b>2. Envía tu pedido</b>Te llega por WhatsApp para confirmar.</li>
+    <li><b>3. Recibe</b>Compro al cierre y te aviso cuando llegue.</li>
+  </ol>
+
+  <div class="chips" id="chips" role="group" aria-label="Categorías"></div>
+  <div class="grid" id="grid"><div class="status">Cargando prendas…</div></div>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Mi pedido" aria-hidden="true">
+  <header><h2>Mi pedido</h2><button class="btn small" id="closeCart">Cerrar</button></header>
+  <div class="lines" id="lines"></div>
+  <footer>
+    <div class="row"><span>Total</span><b class="mono" id="cartTotal">$0</b></div>
+    <div class="row"><span>Anticipo para separar</span><b class="mono" id="cartAnt">$0</b></div>
+    <p class="note" id="cartNote"></p>
+    <a class="btn tape" id="waLink" href="#" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a>
+    <button class="btn" id="copyMsg" type="button">Copiar mensaje del pedido</button>
+    <div class="msg" id="copyMsgOut" role="status"></div>
+  </footer>
+</aside>
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN: 'https://script.google.com/macros/s/AKfycbwt_fCWGm-B9sBM5A9DGUZGQ_2rWtN1wMhcRLa1RCOT64SFfwciA0DDQ43_HFOUXVpP/exec';   ============================================================ */
+var API_URL = 'PEGA_AQUI_LA_URL_DE_TU_APP_DE_GOOGLE';
+
+(function(){
+  var CACHE_KEY = 'ropa-desde-usa-cache-v1';
+  var COLORS = ['#2f5d62','#7a3e48','#44546a','#5b4b8a','#8a5a2b','#3d6b4f'];
+  var DEMO = {
+    settings:{storeName:'Ropa desde USA', whatsapp:'', closeDays:[10,25], leadDays:12, anticipoPct:50},
+    products:[
+      {id:'d1',name:'Camiseta oversize algodón',cat:'Hombre',sizes:['S','M','L','XL'],img:'',price:117000,example:true},
+      {id:'d2',name:'Jean mom fit tiro alto',cat:'Mujer',sizes:['6','8','10','12'],img:'',price:189000,example:true},
+      {id:'d3',name:'Buzo con capota felpa',cat:'Hombre',sizes:['M','L','XL'],img:'',price:165000,example:true},
+      {id:'d4',name:'Tenis blancos de cuero',cat:'Calzado',sizes:['7','8','9','10'],img:'',price:253000,example:true}
+    ]
+  };
+
+  var data = null;      // {settings, products}
+  var cart = [];        // {id,size,qty}
+  var selSize = {};
+  var catFilter = 'Todas';
+
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(t){ var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+  function cop(n){ return '$' + Math.round(n).toLocaleString('es-CO'); }
+  function hashColor(t){ var h=0; for(var i=0;i<t.length;i++){ h=(h*31+t.charCodeAt(i))|0; } return COLORS[Math.abs(h)%COLORS.length]; }
+  function fmtDate(d){ return d.toLocaleDateString('es-CO',{day:'numeric',month:'long'}); }
+  function findP(id){ return data.products.filter(function(p){return p.id===id;})[0]; }
+
+  /* ---- ciclo ---- */
+  function nextCutoff(){
+    var days = (data.settings.closeDays||[]).slice().sort(function(a,b){return a-b;});
+    if(!days.length) return null;
+    var now = new Date(); now.setHours(0,0,0,0);
+    for(var m=0; m<3; m++){
+      var y = now.getFullYear(), mo = now.getMonth()+m;
+      var last = new Date(y, mo+1, 0).getDate();
+      for(var i=0;i<days.length;i++){
+        var d = new Date(y, mo, Math.min(days[i], last));
+        if(d >= now) return d;
+      }
+    }
+    return null;
+  }
+  function renderCycle(){
+    var s = data.settings;
+    $('brandName').textContent = s.storeName;
+    document.title = s.storeName;
+    var c = nextCutoff();
+    if(!c){
+      $('daysLeft').textContent = '–'; $('daysUnit').textContent = '';
+      $('cutoffDate').textContent = 'por definir'; $('arrivalDate').textContent = 'por definir';
+    }else{
+      var now = new Date(); now.setHours(0,0,0,0);
+      var left = Math.round((c - now)/86400000);
+      $('daysLeft').textContent = left === 0 ? 'Hoy' : left;
+      $('daysUnit').textContent = left === 0 ? 'cierra' : (left === 1 ? 'día' : 'días');
+      $('cutoffDate').textContent = fmtDate(c);
+      var a = new Date(c); a.setDate(a.getDate() + s.leadDays);
+      $('arrivalDate').textContent = 'hacia el ' + fmtDate(a);
+    }
+    $('anticipoTxt').textContent = s.anticipoPct + '%';
+  }
+
+  /* ---- catálogo ---- */
+  function renderChips(){
+    var cats = ['Todas'];
+    data.products.forEach(function(p){ if(cats.indexOf(p.cat) < 0) cats.push(p.cat); });
+    if(cats.indexOf(catFilter) < 0) catFilter = 'Todas';
+    $('chips').innerHTML = cats.length > 2 ? cats.map(function(c){
+      return '<button class="chip" data-cat="'+esc(c)+'" aria-pressed="'+(c===catFilter)+'">'+esc(c)+'</button>';
+    }).join('') : '';
+  }
+  function placeholder(p){
+    return '<div class="ph" style="background:'+hashColor(p.name)+'">'+esc(p.name.charAt(0).toUpperCase())+'</div>';
+  }
+  function photoHtml(p){
+    if(p.img) return '<img src="'+esc(p.img)+'" alt="'+esc(p.name)+'" loading="lazy" referrerpolicy="no-referrer">';
+    return placeholder(p);
+  }
+  function renderGrid(){
+    var list = data.products.filter(function(p){ return catFilter==='Todas' || p.cat===catFilter; });
+    if(!list.length){
+      $('grid').innerHTML = '<div class="status">'+(data.products.length ? 'No hay prendas en esta categoría.' : 'Estoy cargando nuevas prendas para el próximo cierre. Vuelve pronto.')+'</div>';
+      return;
+    }
+    $('grid').innerHTML = list.map(function(p){
+      var chosen = selSize[p.id];
+      var sizes = p.sizes.map(function(s){
+        return '<button class="size" data-id="'+esc(p.id)+'" data-size="'+esc(s)+'" aria-pressed="'+(chosen===s)+'">'+esc(s)+'</button>';
+      }).join('');
+      return '<article class="card">'+
+        '<div class="photo">'+photoHtml(p)+(p.example?'<span class="tag">Ejemplo</span>':'')+'</div>'+
+        '<div class="info"><h3>'+esc(p.name)+'</h3>'+
+        '<div class="price">'+cop(p.price)+'</div>'+
+        '<div class="sizes" role="group" aria-label="Tallas de '+esc(p.name)+'">'+sizes+'</div>'+
+        '<button class="btn tape add" data-id="'+esc(p.id)+'">Agregar al pedido</button></div></article>';
+    }).join('');
+    // si una foto remota no carga, mostrar la letra de color
+    var byName = {}; list.forEach(function(p){ byName[p.name] = p; });
+    $('grid').querySelectorAll('.photo img').forEach(function(im){
+      im.addEventListener('error', function(){
+        var p = byName[im.getAttribute('alt')];
+        var box = im.parentNode; im.remove();
+        if(p) box.insertAdjacentHTML('afterbegin', placeholder(p));
+      });
+    });
+  }
+
+  /* ---- pedido ---- */
+  function cartCountN(){ return cart.reduce(function(a,l){return a+l.qty;},0); }
+  function renderCart(){
+    $('cartCount').textContent = cartCountN();
+    var total = 0;
+    if(!cart.length){
+      $('lines').innerHTML = '<div class="empty">Tu pedido está vacío. Elige una talla y agrega una prenda.</div>';
+    }else{
+      $('lines').innerHTML = cart.map(function(l, i){
+        var p = findP(l.id); if(!p) return '';
+        total += p.price * l.qty;
+        return '<div class="line"><div><div class="name">'+esc(p.name)+'</div><div class="note">Talla '+esc(l.size)+'</div>'+
+          '<div class="qty"><button data-i="'+i+'" data-d="-1" aria-label="Quitar una">−</button><span class="mono">'+l.qty+'</span><button data-i="'+i+'" data-d="1" aria-label="Agregar una">+</button></div></div>'+
+          '<div class="mono">'+cop(p.price*l.qty)+'</div></div>';
+      }).join('');
+    }
+    var ant = total * data.settings.anticipoPct/100;
+    $('cartTotal').textContent = cop(total);
+    $('cartAnt').textContent = cop(ant);
+    var c = nextCutoff();
+    $('cartNote').textContent = c ? 'Tu pedido entra al cierre del ' + fmtDate(c) + '. Te confirmo por WhatsApp antes de comprar.' : 'Te confirmo por WhatsApp antes de comprar.';
+    var msg = buildMsg(total, ant);
+    var wa = (data.settings.whatsapp || '').replace(/\D/g,'');
+    $('waLink').href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg);
+    $('waLink').style.pointerEvents = cart.length ? 'auto' : 'none';
+    $('waLink').style.opacity = cart.length ? '1' : '.5';
+    $('copyMsg').disabled = !cart.length;
+    $('copyMsg').dataset.msg = msg;
+  }
+  function buildMsg(total, ant){
+    var c = nextCutoff();
+    var lines = cart.map(function(l){
+      var p = findP(l.id); if(!p) return '';
+      return '- ' + p.name + ' (talla ' + l.size + ') x' + l.qty + ': ' + cop(p.price*l.qty);
+    }).filter(Boolean);
+    return 'Hola, quiero hacer este pedido' + (c ? ' para el cierre del ' + fmtDate(c) : '') + ':\n' + lines.join('\n') +
+      '\nTotal: ' + cop(total) + '\nAnticipo (' + data.settings.anticipoPct + '%): ' + cop(ant);
+  }
+  function openCart(open){
+    $('drawer').classList.toggle('open', open);
+    $('scrim').classList.toggle('open', open);
+    $('drawer').setAttribute('aria-hidden', String(!open));
+    if(open) $('closeCart').focus(); else $('openCart').focus();
+  }
+  function say(el, text, kind){ el.textContent = text; el.className = 'msg' + (kind ? ' '+kind : ''); }
+
+  /* ---- carga de datos ---- */
+  function cleanData(d){
+    if(!d || !d.settings || !Array.isArray(d.products)) return null;
+    d.products = d.products.filter(function(p){ return p && p.name && p.price > 0 && Array.isArray(p.sizes) && p.sizes.length; });
+    d.settings.closeDays = Array.isArray(d.settings.closeDays) ? d.settings.closeDays : [];
+    d.settings.leadDays = Number(d.settings.leadDays) || 12;
+    d.settings.anticipoPct = Number(d.settings.anticipoPct) || 0;
+    d.settings.storeName = d.settings.storeName || 'Ropa desde USA';
+    d.settings.whatsapp = d.settings.whatsapp || '';
+    return d;
+  }
+  function show(d){
+    data = d;
+    // quitar del pedido lo que ya no existe
+    cart = cart.filter(function(l){ return findP(l.id); });
+    renderCycle(); renderChips(); renderGrid(); renderCart();
+  }
+  function start(){
+    var configured = API_URL && API_URL.indexOf('PEGA_AQUI') !== 0;
+    if(!configured){
+      $('demoBar').hidden = false;
+      show(JSON.parse(JSON.stringify(DEMO)));
+      return;
+    }
+    var cached = null;
+    try{ cached = cleanData(JSON.parse(localStorage.getItem(CACHE_KEY))); }catch(e){}
+    if(cached) show(cached);
+    else { data = JSON.parse(JSON.stringify(DEMO)); data.products = []; renderCycle(); renderCart(); }
+
+    var done = false;
+    var timer = setTimeout(function(){ if(!done && !cached) fail(); }, 12000);
+    function fail(){
+      $('grid').innerHTML = '<div class="status">No pude cargar las prendas. <button class="btn small" id="retry">Intentar de nuevo</button></div>';
+      var r = $('retry'); if(r) r.addEventListener('click', function(){ $('grid').innerHTML = '<div class="status">Cargando prendas…</div>'; start(); });
+    }
+    fetch(API_URL, {cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw new Error('http'); return r.json(); })
+      .then(function(j){
+        var d = cleanData(j); if(!d) throw new Error('formato');
+        done = true; clearTimeout(timer);
+        try{ localStorage.setItem(CACHE_KEY, JSON.stringify(d)); }catch(e){}
+        show(d);
+      })
+      .catch(function(){ done = true; clearTimeout(timer); if(!cached) fail(); });
+  }
+
+  /* ---- eventos ---- */
+  $('openCart').addEventListener('click', function(){ renderCart(); openCart(true); });
+  $('closeCart').addEventListener('click', function(){ openCart(false); });
+  $('scrim').addEventListener('click', function(){ openCart(false); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && $('drawer').classList.contains('open')) openCart(false); });
+  $('chips').addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if(!b) return;
+    catFilter = b.dataset.cat; renderChips(); renderGrid();
+  });
+  $('grid').addEventListener('click', function(e){
+    var sz = e.target.closest('.size');
+    if(sz){ selSize[sz.dataset.id] = sz.dataset.size; renderGrid(); return; }
+    var add = e.target.closest('.add');
+    if(add){
+      var id = add.dataset.id, p = findP(id); if(!p) return;
+      var size = selSize[id];
+      if(!size){
+        if(p.sizes.length === 1){ size = p.sizes[0]; }
+        else { add.textContent = 'Elige una talla primero'; setTimeout(function(){ add.textContent = 'Agregar al pedido'; }, 1600); return; }
+      }
+      var ex = cart.filter(function(l){return l.id===id && l.size===size;})[0];
+      if(ex) ex.qty++; else cart.push({id:id, size:size, qty:1});
+      renderCart();
+      add.textContent = 'Agregada';
+      setTimeout(function(){ add.textContent = 'Agregar al pedido'; }, 1000);
+    }
+  });
+  $('lines').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-i]'); if(!b) return;
+    var i = parseInt(b.dataset.i,10); cart[i].qty += parseInt(b.dataset.d,10);
+    if(cart[i].qty <= 0) cart.splice(i,1);
+    renderCart();
+  });
+  $('copyMsg').addEventListener('click', function(){
+    var t = $('copyMsg').dataset.msg || '';
+    var ok = function(){ say($('copyMsgOut'), 'Mensaje copiado.', 'ok'); };
+    var bad = function(){ say($('copyMsgOut'), 'No se pudo copiar. Usa el botón de WhatsApp.', 'err'); };
+    try{ navigator.clipboard.writeText(t).then(ok, bad); }catch(e){ bad(); }
+  });
+
+  start();
+})();
+</script>
+</body>
+</html>
