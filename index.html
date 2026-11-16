@@ -168,8 +168,9 @@ footer.site{padding:24px 16px 40px;text-align:center;color:var(--muted);font-siz
   </footer>
 </aside>
 
+<script src="config.js"></script>
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbwt_fCWGm-B9sBM5A9DGUZGQ_2rWtN1wMhcRLa1RCOT64SFfwciA0DDQ43_HFOUXVpP/exec';
+var API_URL = String((window.TIENDA_CONFIG && window.TIENDA_CONFIG.apiUrl) || '').trim();
 
 (function(){
   var CACHE_KEY = 'ropa-desde-usa-cache-v1';
@@ -340,7 +341,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbwt_fCWGm-B9sBM5A9DGUZGQ_
     renderCycle(); renderChips(); renderGrid(); renderCart();
   }
   function start(){
-    var configured = API_URL && API_URL.indexOf('PEGA_AQUI') !== 0;
+    var configured = /^https:\/\/script\.google\.com\/macros\/s\/[^\s']+\/exec$/.test(API_URL);
     if(!configured){
       $('demoBar').hidden = false;
       show(JSON.parse(JSON.stringify(DEMO)));
